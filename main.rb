@@ -1,35 +1,42 @@
 class Knight
-  attr_accessor :position
-  def initialize(position = [4, 4])
+  def initialize()
     @piece = "&"
-    @position = position
   end
 
-  def knight_moves(cord1, cord2)
-
+  def knight_moves(cord_start, cord_end, moves = [])
+    moves.push("[#{cord_start[0]}][#{cord_start[1]}]")
+    x = cord_start[0]
+    puts x
+    y = cord_start[1]
+   if cord_start == cord_end
+    puts "ass"
+    return moves
+   end
+   #if x < 6
+   #knight_moves(x + 2, y - 1)
+   #end
+   knight_moves(x + 2, y + 1)
   end
 end
 
 class Board
-  def initialize(cord0 = [1, 1])
-    x_axis = [1, 2, 3, 4, 5, 6, 7, 8]
-    y_axis = [1, 2, 3, 4, 5, 6, 7, 8]
-    for x in x_axis
-      elm_pos = false
-      if x = cord0[0] + 1
-        elm_pos = true
-      end
-      puts
-      for y in y_axis
-        if y == cord0[1] + 1 && elm_pos == true 
-          print "Z" 
-          elm_pos = false
-        else
-          print "x" 
-        end     
-      end
+  def initialize(array_x = [], array_y = [])
+    @array_y = array_y
+    
+    0.upto(7) do |num|
+      array_x.push(num + 1)
     end
+    
+    0.upto(7) do |num|
+      @array_y.push(array_x)
+    end
+    return @array_y
   end
+
 end
 
-b = Board.new
+ b = Board.new
+ pp b
+
+ k = Knight.new
+puts k.knight_moves([0, 0], [1, 2])
