@@ -5,32 +5,26 @@ class Knight
 
   def knight_moves(cord_start, cord_end, moves = [])
     x = cord_start[0]
-    
     y = cord_start[1]
-    if y > 7 || y < 0 || x > 7 || x < 7
-      return
+    if y > 7 || y < 0 || x > 7 || x < 0
+      return 'no'
+    end
+    puts "#{x} / #{y}"
+  
+    until cord_start == cord_end
+      moves.push("[#{cord_start[0]}][#{cord_start[1]}]")
+      if x - cord_end[0] < y -cord_end[1]
+        x > cord_end[0] ? x = x - 2 : x = x + 2
+        y > cord_end[1] ? y = y - 1 : y = y + 1
+      else
+        y > cord_end[1] ? y = y - 2 : y = y + 2
+        x > cord_end[0] ? x = x - 1 : x = x + 1
+      end
+      cord_start = [x, y]
     end
     moves.push("[#{cord_start[0]}][#{cord_start[1]}]")
-    
-    puts "#{x} / #{y}"
-   if cord_start == cord_end
-    puts "ass"
     return moves
-   end
-   if x < 6
-     knight_moves([x + 2, y - 1], cord_end)
-     knight_moves([x + 2, y + 1], cord_end)
-   elsif x > 1
-    knight_moves([x - 2, y - 1], cord_end)
-    knight_moves([x - 2, y + 1], cord_end)
-   elsif y < 6
-    knight_moves([x - 1, y + 2], cord_end)
-    knight_moves([x + 1, y + 2], cord_end)
-   elsif y > 1
-    knight_moves([x - 1, y - 2], cord_end)
-    knight_moves([x + 1, y - 2], cord_end)
   end
-   end
 end
 
 class Board
