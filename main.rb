@@ -8,8 +8,10 @@ class Knight
 end
 
 class Board
-  attr_accessor :start_pos, :end_pos, :node
-  def initialize(); end
+  attr_accessor :node
+  def initialize()
+    @all_arrays = [] 
+  end
   
   def knight_moves(start_pos, end_pos)
     @start_pos = start_pos
@@ -29,6 +31,7 @@ class Board
         parents = parents.parent
       end
       @moves_arr.unshift(@start_pos)
+      @all_arrays.push(@moves_arr)
     elsif count == 6 
       return
     else
@@ -41,7 +44,7 @@ class Board
     create_graph([x - 1, y - 2], node, count + 1) if x > 0 && y > 1
     create_graph([x + 1, y + 2], node, count + 1) if x < 7 && y < 6
     create_graph([x + 1, y - 2], node, count + 1) if x < 7 && y > 1
-    return @moves_arr
+    return @all_arrays.sort_by(&:length)[0]
     end
   end
 
@@ -51,20 +54,21 @@ class Board
       puts
       until x == 8
         if array.any? { |elm| elm[0] == y && elm[1] == x}
-          print "&"
+          print "[&]"
+        elsif (x + y) % 2 == 0
+          print "[B]"
         else 
-          print "X"
+          print "[W]"
         end
         x += 1
       end
       y += 1
       x = 0
     end
-
   end
 end
 
 
 
 b = Board.new
-puts b.knight_moves([0, 0], [7, 7])
+print b.knight_moves([0, 0], [3, 3])
