@@ -4,13 +4,13 @@ class Knight
     @position = position
     @child = []
     @parent = parent
+    $piece = "[&]"
   end
 end
 
 class Board
-  attr_accessor :node
   def initialize()
-    @all_arrays = [] 
+    @moves_array = [] 
   end
   
   def knight_moves(start_pos, end_pos)
@@ -22,18 +22,17 @@ class Board
 
   def create_graph(position, parent = nil, count = 0)
    node = Knight.new(position, parent)
-
+   return if count == 6
+   
     if node.position == @end_pos
-      @moves_arr = [node.position]
+      node_moves = [node.position]
       parents = node.parent
       until parents.position == @start_pos
-        @moves_arr.unshift(parents.position)
+        node_moves.unshift(parents.position)
         parents = parents.parent
       end
-      @moves_arr.unshift(@start_pos)
-      @all_arrays.push(@moves_arr)
-    elsif count == 6 
-      return
+      node_moves.unshift(@start_pos)
+      @moves_array.push(node_moves)
     else
     x = position[0]; y = position[1]
     create_graph([x + 2, y - 1], node, count + 1) if x < 6 && y > 0
@@ -44,7 +43,7 @@ class Board
     create_graph([x - 1, y - 2], node, count + 1) if x > 0 && y > 1
     create_graph([x + 1, y + 2], node, count + 1) if x < 7 && y < 6
     create_graph([x + 1, y - 2], node, count + 1) if x < 7 && y > 1
-    return @all_arrays.sort_by(&:length)[0]
+    return @moves_array.sort_by(&:length)[0]
     end
   end
 
@@ -54,7 +53,7 @@ class Board
       puts
       until x == 8
         if array.any? { |elm| elm[0] == y && elm[1] == x}
-          print "[&]"
+          print "#{$piece}"
         elsif (x + y) % 2 == 0
           print "[B]"
         else 
@@ -71,4 +70,4 @@ end
 
 
 b = Board.new
-print b.knight_moves([0, 0], [3, 3])
+print b.knight_moves([5, 6], [6, 6])
