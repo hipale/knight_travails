@@ -1,41 +1,51 @@
 class Knight
-  attr_accessor :data, :moves
-  def initialize()
-    @piece = "&"
+  attr_accessor :position, :parent, :child
+  def initialize(position, parent = nil)
+    @position = position
+    @child = []
+    @parent = parent
+  end
+end
+
+class Board
+  attr_accessor :start_pos, :end_pos, :node
+  def initialize(); end
+  
+  def knight_moves(start_pos, end_pos)
+    @start_pos = start_pos
+    @end_pos = end_pos
+    create_graph(start_pos)
   end
 
-  def find()
-  end
-
-  def knight_moves(start_pos, end_pos, count = 0, moves_arr = [])
-
-    moves_arr.push(start_pos)
+  def create_graph(position, parent = nil, count = 0)
    
-    @data = start_pos
-    x = @data[0]
-    y = @data[1]
-    if x > 7 || x < 0 || y > 7 || y < 0 || count == 7
-      return "no"
-    else
-     @moves = []
-     @moves.push([x + 2, y - 1]) if x < 6 && y > 0
-     @moves.push([x - 2, y - 1]) if x > 1 && y > 0
-     @moves.push([x + 2, y + 1]) if x < 6 && y < 7
-     @moves.push([x - 2, y + 1]) if x > 1 && y < 7
-     @moves.push([x - 1, y + 2]) if x > 0 && y < 6
-     @moves.push([x - 1, y - 2]) if x > 0 && y > 1
-     @moves.push([x + 1, y + 2]) if x < 7 && y < 6
-     @moves.push([x + 1, y - 2]) if x < 7 && y > 1
-     @moves.each  do |elm| 
-      
-      if moves_arr.any? { |para| para == end_pos }
-        return moves_arr
+    node = Knight.new(position, parent)
+    if node.position == @end_pos
+      @moves_arr = [node.position]
+      parents = node.parent
+      until parents.position == @start_pos
+        @moves_arr.push(parents.position)
+        parents = parents.parent
       end
-      knight_moves(elm, end_pos, count + 1, moves_arr) 
-    end
+      @moves_arr.push(@start_pos)
+      return @moves_arr
+    elsif count == 6 then return
+    else
+    x = position[0]; y = position[1]
+    create_graph([x + 2, y - 1], node, count + 1) if x < 6 && y > 0
+    create_graph([x - 2, y - 1], node, count + 1) if x > 1 && y > 0
+    create_graph([x + 2, y + 1], node, count + 1) if x < 6 && y < 7
+    create_graph([x - 2, y + 1], node, count + 1) if x > 1 && y < 7
+    create_graph([x - 1, y + 2], node, count + 1) if x > 0 && y < 6
+    create_graph([x - 1, y - 2], node, count + 1) if x > 0 && y > 1
+    create_graph([x + 1, y + 2], node, count + 1) if x < 7 && y < 6
+    create_graph([x + 1, y - 2], node, count + 1) if x < 7 && y > 1
+    return @moves_arr
     end
   end
 end
 
-k = Knight.new
-print k.knight_moves([0, 0], [4, 4])
+
+
+b = Board.new
+pp b.knight_moves([0, 0], [7, 7])
